@@ -29,16 +29,39 @@ class MainActivity : AppCompatActivity() {
 
         mFragmentManager.beginTransaction()
             .add(R.id.hostFragment, profileFragment, ProfileFragment::class.java.name)
-            .hide(profileFragment)
+            .hide(profileFragment).commit()
+        mFragmentManager.beginTransaction()
+            .add(R.id.hostFragment, addFragment, AddFragment::class.java.name).hide(addFragment)
             .commit()
         mFragmentManager.beginTransaction()
-            .add(R.id.hostFragment, addFragment, AddFragment::class.java.name)
-            .hide(addFragment)
-            .commit()
-        mFragmentManager.beginTransaction()
-            .add(R.id.hostFragment, homeFragment, HomeFragment::class.java.name)
-            .hide(homeFragment)
+            .add(R.id.hostFragment, homeFragment, HomeFragment::class.java.name).hide(homeFragment)
             .commit()
 
+        mBinding.bottomNav.setOnNavigationItemSelectedListener {
+            when (it.itemId) {
+                R.id.action_home -> {
+                    mFragmentManager.beginTransaction().hide(mActiveFragment).show(homeFragment)
+                        .commit()
+                    mActiveFragment = homeFragment
+                    true
+                }
+
+                R.id.action_add -> {
+                    mFragmentManager.beginTransaction().hide(mActiveFragment).show(addFragment)
+                        .commit()
+                    mActiveFragment = addFragment
+                    true
+                }
+
+                R.id.action_profile -> {
+                    mFragmentManager.beginTransaction().hide(mActiveFragment).show(profileFragment)
+                        .commit()
+                    mActiveFragment = profileFragment
+                    true
+                }
+
+                else -> false
+            }
+        }
     }
 }
