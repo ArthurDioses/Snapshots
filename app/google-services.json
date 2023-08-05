@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "457341686892",
+    "project_id": "snapshots-ec726",
+    "storage_bucket": "snapshots-ec726.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:457341686892:android:62a27d8e00308e9d9eb449",
+        "android_client_info": {
+          "package_name": "com.dioses.snapshots"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "457341686892-0giv92anb2tblap6kjjao5rm1i21t4hj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dioses.snapshots",
+            "certificate_hash": "0f7094283130e4e4d8028a5b1e0f83456f35c82b"
+          }
+        },
+        {
+          "client_id": "457341686892-6u9ah6go8e7lbk3jn0emna9p25fcno2s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCWpZdVbJaOssJav2mEWSyC9B7_009dhMg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "457341686892-6u9ah6go8e7lbk3jn0emna9p25fcno2s.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

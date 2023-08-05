@@ -56,10 +56,16 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:32.2.0')
 
     // Add the dependencies for analytics
-    implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation("com.google.firebase:firebase-analytics-ktx")
 
     // Add the dependency for the Cloud Storage library
-    implementation("com.google.firebase:firebase-storage-ktx")
+    implementation 'com.google.firebase:firebase-storage-ktx'
+
+    // FirebaseUI for Firebase Realtime Database
+    implementation 'com.firebaseui:firebase-ui-database-ktx'
+
+    // FirebaseUI for Firebase Auth
+    implementation("com.google.firebase:firebase-auth-ktx")
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.4'
