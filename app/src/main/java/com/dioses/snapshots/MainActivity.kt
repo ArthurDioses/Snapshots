@@ -35,6 +35,7 @@ class MainActivity : AppCompatActivity() {
             if (user == null) {
                 startActivityForResult(
                     AuthUI.getInstance().createSignInIntentBuilder()
+                        .setIsSmartLockEnabled(false)
                         .setAvailableProviders(
                             Arrays.asList(
                                 AuthUI.IdpConfig.EmailBuilder().build(),
