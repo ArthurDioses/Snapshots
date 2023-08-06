@@ -72,6 +72,7 @@ class HomeFragment : Fragment() {
 
         mBinding.recyclerView.apply {
             setHasFixedSize(true)
+            itemAnimator = null
             layoutManager = mLayoutManager
             adapter = mFirebaseAdapter
         }
