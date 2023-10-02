@@ -1,4 +1,4 @@
-package com.dioses.snapshots
+package com.dioses.snapshots.ui.fragments
 
 import android.content.Context
 import android.os.Bundle
@@ -11,16 +11,18 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.dioses.snapshots.utils.FragmentAux
+import com.dioses.snapshots.R
+import com.dioses.snapshots.entities.Snapshot
 import com.dioses.snapshots.databinding.FragmentHomeBinding
 import com.dioses.snapshots.databinding.ItemSnapshotBinding
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.firebase.ui.database.FirebaseRecyclerOptions
-import com.firebase.ui.database.SnapshotParser
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 
-class HomeFragment : Fragment(), HomeAux {
+class FragmentFragment : Fragment(), FragmentAux {
 
     private lateinit var mBinding: FragmentHomeBinding
     private lateinit var mFirebaseAdapter: FirebaseRecyclerAdapter<Snapshot, SnapshotHolder>
@@ -101,7 +103,7 @@ class HomeFragment : Fragment(), HomeAux {
         mFirebaseAdapter.stopListening()
     }
 
-    override fun goToTop() {
+    override fun refresh() {
         mBinding.recyclerView.smoothScrollToPosition(0)
     }
 

@@ -1,4 +1,4 @@
-package com.dioses.snapshots
+package com.dioses.snapshots.entities
 
 import com.google.firebase.database.Exclude
 import com.google.firebase.firestore.IgnoreExtraProperties

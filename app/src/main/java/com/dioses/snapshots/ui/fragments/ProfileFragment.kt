@@ -1,4 +1,4 @@
-package com.dioses.snapshots
+package com.dioses.snapshots.ui.fragments
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

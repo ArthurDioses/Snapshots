@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:padding="@dimen/common_padding_default"
     android:theme="@style/Theme.Material3.Light"
-    tools:context=".AddFragment">
+    tools:context=".ui.fragments.AddFragment">
 
     <ProgressBar
         android:id="@+id/progressBar"

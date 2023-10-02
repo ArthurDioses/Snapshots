@@ -1,4 +1,4 @@
-package com.dioses.snapshots
+package com.dioses.snapshots.ui
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -6,11 +6,15 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import com.dioses.snapshots.utils.FragmentAux
+import com.dioses.snapshots.R
 import com.dioses.snapshots.databinding.ActivityMainBinding
+import com.dioses.snapshots.ui.fragments.AddFragment
+import com.dioses.snapshots.ui.fragments.FragmentFragment
+import com.dioses.snapshots.ui.fragments.ProfileFragment
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.auth.FirebaseAuth
-import java.util.Arrays
 
 class MainActivity : AppCompatActivity() {
     private val RC_SIGN_IN = 21
@@ -37,7 +41,7 @@ class MainActivity : AppCompatActivity() {
                     AuthUI.getInstance().createSignInIntentBuilder()
                         .setIsSmartLockEnabled(false)
                         .setAvailableProviders(
-                            Arrays.asList(
+                            listOf(
                                 AuthUI.IdpConfig.EmailBuilder().build(),
                                 AuthUI.IdpConfig.GoogleBuilder().build()
                             )
@@ -50,7 +54,7 @@ class MainActivity : AppCompatActivity() {
     private fun setupBottomNav() {
         mFragmentManager = supportFragmentManager
 
-        val homeFragment = HomeFragment()
+        val homeFragment = FragmentFragment()
         val addFragment = AddFragment()
         val profileFragment = ProfileFragment()
 
@@ -63,7 +67,7 @@ class MainActivity : AppCompatActivity() {
             .add(R.id.hostFragment, addFragment, AddFragment::class.java.name).hide(addFragment)
             .commit()
         mFragmentManager.beginTransaction()
-            .add(R.id.hostFragment, homeFragment, HomeFragment::class.java.name).hide(homeFragment)
+            .add(R.id.hostFragment, homeFragment, FragmentFragment::class.java.name).hide(homeFragment)
             .commit()
 
         mBinding.bottomNav.setOnNavigationItemSelectedListener {
@@ -94,7 +98,7 @@ class MainActivity : AppCompatActivity() {
         }
         mBinding.bottomNav.setOnNavigationItemReselectedListener {
             when (it.itemId) {
-                R.id.action_home -> (homeFragment as HomeAux).goToTop()
+                R.id.action_home -> (homeFragment as FragmentAux).refresh()
             }
         }
     }
@@ -113,7 +117,7 @@ class MainActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == RC_SIGN_IN) {
             if (resultCode == RESULT_OK) {
-                Toast.makeText(this, "Bienvenido", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.welcome), Toast.LENGTH_SHORT).show()
             } else {
                 if (IdpResponse.fromResultIntent(data) == null) {
                     finish()

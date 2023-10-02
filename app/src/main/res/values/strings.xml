@@ -6,4 +6,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="post_message_title">Seleccione una imagen</string>
     <string name="post_message_valid_title">Por favor, añada un título</string>
+    <string name="welcome">Bienvenido</string>
+    <string name="helper_required">Requerido</string>
+    <string name="post_message_post_success">Instantánea publicada.</string>
 </resources>
