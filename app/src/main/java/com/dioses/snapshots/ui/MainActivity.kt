@@ -70,7 +70,7 @@ class MainActivity : AppCompatActivity() {
             .add(R.id.hostFragment, homeFragment, FragmentFragment::class.java.name).hide(homeFragment)
             .commit()
 
-        mBinding.bottomNav.setOnNavigationItemSelectedListener {
+        mBinding.bottomNav.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.action_home -> {
                     mFragmentManager.beginTransaction().hide(mActiveFragment).show(homeFragment)
@@ -96,7 +96,7 @@ class MainActivity : AppCompatActivity() {
                 else -> false
             }
         }
-        mBinding.bottomNav.setOnNavigationItemReselectedListener {
+        mBinding.bottomNav.setOnItemReselectedListener {
             when (it.itemId) {
                 R.id.action_home -> (homeFragment as FragmentAux).refresh()
             }
