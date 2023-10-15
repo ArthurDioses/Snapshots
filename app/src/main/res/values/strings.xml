@@ -9,4 +9,5 @@
     <string name="welcome">Bienvenido</string>
     <string name="helper_required">Requerido</string>
     <string name="post_message_post_success">Instantánea publicada.</string>
+    <string name="profile_logout_success">Hasta pronto...</string>
 </resources>
