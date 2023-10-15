@@ -11,10 +11,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.widget.addTextChangedListener
 import com.dioses.snapshots.R
 import com.dioses.snapshots.SnapshotsApplication.Companion.PATH_SNAPSHOT
-import com.dioses.snapshots.SnapshotsApplication.Companion.RC_GALLERY
 import com.dioses.snapshots.SnapshotsApplication.Companion.currentUser
 import com.dioses.snapshots.entities.Snapshot
 import com.dioses.snapshots.databinding.FragmentAddBinding
@@ -35,6 +35,19 @@ class AddFragment : Fragment() {
     private var mainAux: MainAux? = null
 
     private var mPhotoSelectedUri: Uri? = null
+
+    private val galleryResult =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == Activity.RESULT_OK) {
+                mPhotoSelectedUri = it.data?.data
+                with(mBinding) {
+                    imgPhoto.setImageURI(mPhotoSelectedUri)
+                    tilTitle.visibility = View.VISIBLE
+                    tvMessage.text = getString(R.string.post_message_valid_title)
+
+                }
+            }
+        }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -77,7 +90,7 @@ class AddFragment : Fragment() {
 
     private fun openGallery() {
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-        startActivityForResult(intent, RC_GALLERY)
+        galleryResult.launch(intent)
     }
 
     private fun postSnapshot() {
@@ -134,20 +147,6 @@ class AddFragment : Fragment() {
                 tilTitle.error = null
                 tvMessage.text = getString(R.string.post_message_title)
                 imgPhoto.setImageDrawable(null)
-            }
-        }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == RC_GALLERY) {
-                mPhotoSelectedUri = data?.data
-                with(mBinding) {
-                    imgPhoto.setImageURI(mPhotoSelectedUri)
-                    tilTitle.visibility = View.VISIBLE
-                    tvMessage.text = getString(R.string.post_message_valid_title)
-                }
             }
         }
     }

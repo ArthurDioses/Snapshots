@@ -1,9 +1,9 @@
 package com.dioses.snapshots.ui
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.dioses.snapshots.utils.FragmentAux
@@ -18,12 +18,22 @@ import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : AppCompatActivity() {
-    private val RC_SIGN_IN = 21
     private lateinit var mBinding: ActivityMainBinding
     private lateinit var mActiveFragment: Fragment
     private var mFragmentManager: FragmentManager? = null
     private lateinit var mAuthListener: FirebaseAuth.AuthStateListener
     private var mFirebaseAuth: FirebaseAuth? = null
+
+    private val authResult =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == RESULT_OK) {
+                Toast.makeText(this, getString(R.string.welcome), Toast.LENGTH_SHORT).show()
+            } else {
+                if (IdpResponse.fromResultIntent(it.data) == null) {
+                    finish()
+                }
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,17 +45,17 @@ class MainActivity : AppCompatActivity() {
     private fun setupAuth() {
         mFirebaseAuth = FirebaseAuth.getInstance()
         mAuthListener = FirebaseAuth.AuthStateListener {
-            val user = it.currentUser
-            if (user == null) {
-                startActivityForResult(
-                    AuthUI.getInstance().createSignInIntentBuilder()
+            if (it.currentUser == null) {
+                authResult.launch(
+                    AuthUI.getInstance()
+                        .createSignInIntentBuilder()
                         .setIsSmartLockEnabled(false)
                         .setAvailableProviders(
                             listOf(
                                 AuthUI.IdpConfig.EmailBuilder().build(),
                                 AuthUI.IdpConfig.GoogleBuilder().build()
                             )
-                        ).build(), RC_SIGN_IN
+                        ).build()
                 )
             } else {
                 SnapshotsApplication.currentUser = it.currentUser!!
@@ -124,16 +134,4 @@ class MainActivity : AppCompatActivity() {
         mFirebaseAuth?.removeAuthStateListener(mAuthListener)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == RC_SIGN_IN) {
-            if (resultCode == RESULT_OK) {
-                Toast.makeText(this, getString(R.string.welcome), Toast.LENGTH_SHORT).show()
-            } else {
-                if (IdpResponse.fromResultIntent(data) == null) {
-                    finish()
-                }
-            }
-        }
-    }
 }
