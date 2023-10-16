@@ -19,7 +19,6 @@ import com.dioses.snapshots.SnapshotsApplication.Companion.currentUser
 import com.dioses.snapshots.entities.Snapshot
 import com.dioses.snapshots.databinding.FragmentAddBinding
 import com.dioses.snapshots.utils.MainAux
-import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
@@ -69,6 +68,11 @@ class AddFragment : Fragment() {
         mSnapshotsDatabaseRef = FirebaseDatabase.getInstance().reference.child(PATH_SNAPSHOT)
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mainAux = activity as MainAux
+    }
+
     private fun setupButtons() {
         with(mBinding) {
             btnPost.setOnClickListener {
@@ -102,9 +106,9 @@ class AddFragment : Fragment() {
             val myStorageRef = mSnapshotsStorageRef.child(currentUser.uid).child(key)
             myStorageRef.putFile(mPhotoSelectedUri!!)
                 .addOnProgressListener {
-                    val progress = (100 * it.bytesTransferred / it.totalByteCount).toDouble()
+                    val progress = (100 * it.bytesTransferred / it.totalByteCount).toInt()
                     with(mBinding) {
-                        progressBar.progress = progress.toInt()
+                        progressBar.progress = progress
                         tvMessage.text = String.format("%s%%", progress)
                     }
                 }
@@ -112,27 +116,17 @@ class AddFragment : Fragment() {
                     mBinding.progressBar.visibility = View.INVISIBLE
                 }
                 .addOnSuccessListener {
-                    it.storage.downloadUrl.addOnSuccessListener {
-                        saveSnapshot(key, it.toString(), mBinding.etTitle.text.toString().trim())
-                        mBinding.tilTitle.visibility = View.GONE
-                        mBinding.tvMessage.text = getString(R.string.post_message_title)
+                    it.storage.downloadUrl.addOnSuccessListener { downloadUri ->
+                        saveSnapshot(
+                            key,
+                            downloadUri.toString(),
+                            mBinding.etTitle.text.toString().trim()
+                        )
                     }
                 }
-        }
-
-
-        if (mPhotoSelectedUri != null) {
-            mSnapshotsStorageRef.putFile(mPhotoSelectedUri!!).addOnProgressListener {
-                val progress = (100 * it.bytesTransferred / it.totalByteCount).toDouble()
-                mBinding.progressBar.progress = progress.toInt()
-                mBinding.tvMessage.text = "$progress%"
-            }.addOnCompleteListener {
-                mBinding.progressBar.visibility = View.INVISIBLE
-            }.addOnFailureListener {
-                Snackbar.make(
-                    mBinding.root, "No se pudo subir, intente más tarde", Snackbar.LENGTH_SHORT
-                ).show()
-            }
+                .addOnFailureListener {
+                    mainAux?.showMessage(R.string.post_message_post_image_fail)
+                }
         }
     }
 
@@ -149,6 +143,10 @@ class AddFragment : Fragment() {
                 imgPhoto.setImageDrawable(null)
             }
         }
+            .addOnCompleteListener { enableUI(true) }
+            .addOnFailureListener {
+                mainAux?.showMessage(R.string.post_message_post_snapshot_fail)
+            }
     }
 
     private fun validateFields(vararg textFields: TextInputLayout): Boolean {

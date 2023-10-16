@@ -11,7 +11,6 @@ import com.dioses.snapshots.SnapshotsApplication
 import com.dioses.snapshots.databinding.FragmentProfileBinding
 import com.dioses.snapshots.utils.FragmentAux
 import com.firebase.ui.auth.AuthUI
-import com.google.firebase.auth.FirebaseAuth
 
 class ProfileFragment : Fragment(), FragmentAux {
 
@@ -25,9 +24,11 @@ class ProfileFragment : Fragment(), FragmentAux {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mBinding.tvName.text = FirebaseAuth.getInstance().currentUser?.displayName
-        mBinding.tvEmail.text = FirebaseAuth.getInstance().currentUser?.email
+        refresh()
+        setupButton()
+    }
 
+    private fun setupButton() {
         mBinding.btnLogout.setOnClickListener {
             signOut()
         }
@@ -36,7 +37,11 @@ class ProfileFragment : Fragment(), FragmentAux {
     private fun signOut() {
         context?.let {
             AuthUI.getInstance().signOut(it).addOnCompleteListener {
-                Toast.makeText(context, getString(R.string.profile_logout_success), Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    context,
+                    getString(R.string.profile_logout_success),
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }

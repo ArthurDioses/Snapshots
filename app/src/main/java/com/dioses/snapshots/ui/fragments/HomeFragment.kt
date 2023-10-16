@@ -13,6 +13,8 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.dioses.snapshots.utils.FragmentAux
 import com.dioses.snapshots.R
+import com.dioses.snapshots.SnapshotsApplication.Companion.PATH_SNAPSHOT
+import com.dioses.snapshots.SnapshotsApplication.Companion.PROPERTY_LIKE_LIST
 import com.dioses.snapshots.entities.Snapshot
 import com.dioses.snapshots.databinding.FragmentHomeBinding
 import com.dioses.snapshots.databinding.ItemSnapshotBinding
@@ -20,13 +22,16 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.firebase.ui.database.FirebaseRecyclerOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 
-class FragmentFragment : Fragment(), FragmentAux {
+class HomeFragment : Fragment(), FragmentAux {
 
     private lateinit var mBinding: FragmentHomeBinding
     private lateinit var mFirebaseAdapter: FirebaseRecyclerAdapter<Snapshot, SnapshotHolder>
     private lateinit var mLayoutManager: RecyclerView.LayoutManager
+    private lateinit var mSnapshotsRef: DatabaseReference
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -37,7 +42,17 @@ class FragmentFragment : Fragment(), FragmentAux {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val query = FirebaseDatabase.getInstance().reference.child("snapshots")
+        setupFirebase()
+        setupAdapter()
+        setupRecyclerView()
+    }
+
+    private fun setupFirebase() {
+        mSnapshotsRef = FirebaseDatabase.getInstance().reference.child(PATH_SNAPSHOT)
+    }
+
+    private fun setupAdapter() {
+        val query = mSnapshotsRef
         val options =
             FirebaseRecyclerOptions.Builder<Snapshot>().setQuery(query) {
                 val snapshot = it.getValue(Snapshot::class.java)
@@ -82,6 +97,10 @@ class FragmentFragment : Fragment(), FragmentAux {
                 Toast.makeText(mContext, error.message, Toast.LENGTH_SHORT).show()
             }
         }
+
+    }
+
+    private fun setupRecyclerView() {
         mLayoutManager = LinearLayoutManager(context)
 
         mBinding.recyclerView.apply {
@@ -90,7 +109,6 @@ class FragmentFragment : Fragment(), FragmentAux {
             layoutManager = mLayoutManager
             adapter = mFirebaseAdapter
         }
-
     }
 
     override fun onStart() {
@@ -108,17 +126,17 @@ class FragmentFragment : Fragment(), FragmentAux {
     }
 
     private fun deleteSnapshot(snapshot: Snapshot) {
-        val databaseReference = FirebaseDatabase.getInstance().reference.child("snapshots")
+        val databaseReference = FirebaseDatabase.getInstance().reference.child(PATH_SNAPSHOT)
         databaseReference.child(snapshot.id).removeValue()
     }
 
     private fun setLike(snapshot: Snapshot, checked: Boolean) {
-        val databaseReference = FirebaseDatabase.getInstance().reference.child("snapshots")
+        val databaseReference = FirebaseDatabase.getInstance().reference.child(PATH_SNAPSHOT)
         if (checked) {
-            databaseReference.child(snapshot.id).child("likeList")
+            databaseReference.child(snapshot.id).child(PROPERTY_LIKE_LIST)
                 .child(FirebaseAuth.getInstance().currentUser!!.uid).setValue(checked)
         } else {
-            databaseReference.child(snapshot.id).child("likeList")
+            databaseReference.child(snapshot.id).child(PROPERTY_LIKE_LIST)
                 .child(FirebaseAuth.getInstance().currentUser!!.uid).setValue(null)
         }
     }
@@ -130,7 +148,7 @@ class FragmentFragment : Fragment(), FragmentAux {
             binding.btnDelete.setOnClickListener {
                 deleteSnapshot(snapshot)
             }
-            binding.cbLike.setOnCheckedChangeListener { compoundButton, checked ->
+            binding.cbLike.setOnCheckedChangeListener { _, checked ->
                 setLike(snapshot, checked)
             }
         }

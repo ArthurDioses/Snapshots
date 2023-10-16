@@ -11,13 +11,15 @@ import com.dioses.snapshots.R
 import com.dioses.snapshots.SnapshotsApplication
 import com.dioses.snapshots.databinding.ActivityMainBinding
 import com.dioses.snapshots.ui.fragments.AddFragment
-import com.dioses.snapshots.ui.fragments.FragmentFragment
+import com.dioses.snapshots.ui.fragments.HomeFragment
 import com.dioses.snapshots.ui.fragments.ProfileFragment
+import com.dioses.snapshots.utils.MainAux
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.IdpResponse
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), MainAux {
     private lateinit var mBinding: ActivityMainBinding
     private lateinit var mActiveFragment: Fragment
     private var mFragmentManager: FragmentManager? = null
@@ -74,7 +76,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupBottomNav(fragmentManager: FragmentManager) {
 
-        val homeFragment = FragmentFragment()
+        val homeFragment = HomeFragment()
         val addFragment = AddFragment()
         val profileFragment = ProfileFragment()
 
@@ -87,7 +89,7 @@ class MainActivity : AppCompatActivity() {
             .add(R.id.hostFragment, addFragment, AddFragment::class.java.name).hide(addFragment)
             .commit()
         fragmentManager.beginTransaction()
-            .add(R.id.hostFragment, homeFragment, FragmentFragment::class.java.name)
+            .add(R.id.hostFragment, homeFragment, HomeFragment::class.java.name)
             .hide(homeFragment)
             .commit()
 
@@ -134,4 +136,12 @@ class MainActivity : AppCompatActivity() {
         mFirebaseAuth?.removeAuthStateListener(mAuthListener)
     }
 
+    /*
+     *   MainAux
+     * */
+    override fun showMessage(resId: Int, duration: Int) {
+        Snackbar.make(mBinding.root, resId, duration)
+            .setAnchorView(mBinding.bottomNav)
+            .show()
+    }
 }
