@@ -77,17 +77,27 @@ class HomeFragment : Fragment(), FragmentAux {
                 val snapshot = getItem(position)
                 with(holder) {
                     setListener(snapshot)
-                    binding.tvTitle.text = snapshot.title
-                    binding.cbLike.text = snapshot.likeList.keys.size.toString()
-                    FirebaseAuth.getInstance().currentUser?.let {
-                        binding.cbLike.isChecked =
-                            snapshot.likeList.containsKey(it.uid)
+                    with(binding) {
+                        tvTitle.text = snapshot.title
+                        cbLike.text = snapshot.likeList.keys.size.toString()
+                        FirebaseAuth.getInstance().currentUser?.let {
+                            cbLike.isChecked =
+                                snapshot.likeList.containsKey(it.uid)
+                        }
+                        Glide.with(mContext)
+                            .load(snapshot.photoUrl)
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .centerCrop()
+                            .into(imgPhoto)
+
+                        btnDelete.visibility =
+                            if (model.ownerUid == currentUser.uid) {
+                                View.VISIBLE
+                            } else {
+                                View.INVISIBLE
+                            }
                     }
-                    Glide.with(mContext)
-                        .load(snapshot.photoUrl)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .centerCrop()
-                        .into(binding.imgPhoto)
+
                 }
             }
 
