@@ -138,8 +138,8 @@ class HomeFragment : Fragment(), FragmentAux {
                         .child(PATH_SNAPSHOT)
                         .child(currentUser.uid)
                         .child(snapshot.id)
-                    storageSnapshotsRef.delete().addOnCompleteListener {
-                        if (it.isSuccessful) {
+                    storageSnapshotsRef.delete().addOnCompleteListener { result ->
+                        if (result.isSuccessful) {
                             mSnapshotsRef.child(snapshot.id).removeValue()
                         } else {
                             Snackbar.make(

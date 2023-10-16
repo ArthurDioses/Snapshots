@@ -11,6 +11,7 @@ import com.dioses.snapshots.SnapshotsApplication
 import com.dioses.snapshots.databinding.FragmentProfileBinding
 import com.dioses.snapshots.utils.FragmentAux
 import com.firebase.ui.auth.AuthUI
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class ProfileFragment : Fragment(), FragmentAux {
@@ -45,13 +46,18 @@ class ProfileFragment : Fragment(), FragmentAux {
 
     private fun signOut() {
         context?.let {
-            AuthUI.getInstance().signOut(it).addOnCompleteListener {
-                Toast.makeText(
-                    context,
-                    getString(R.string.profile_logout_success),
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
+            AuthUI.getInstance().signOut(it)
+                .addOnCompleteListener {
+                    Toast.makeText(
+                        context,
+                        getString(R.string.profile_logout_success),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    mBinding.tvName.text = ""
+                    mBinding.tvEmail.text = ""
+                    (activity?.findViewById(R.id.bottomNav) as? BottomNavigationView)
+                        ?.selectedItemId = R.id.action_home
+                }
         }
     }
 
