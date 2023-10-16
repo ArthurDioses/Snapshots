@@ -15,16 +15,19 @@ import com.dioses.snapshots.utils.FragmentAux
 import com.dioses.snapshots.R
 import com.dioses.snapshots.SnapshotsApplication.Companion.PATH_SNAPSHOT
 import com.dioses.snapshots.SnapshotsApplication.Companion.PROPERTY_LIKE_LIST
+import com.dioses.snapshots.SnapshotsApplication.Companion.currentUser
 import com.dioses.snapshots.entities.Snapshot
 import com.dioses.snapshots.databinding.FragmentHomeBinding
 import com.dioses.snapshots.databinding.ItemSnapshotBinding
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.firebase.ui.database.FirebaseRecyclerOptions
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.storage.FirebaseStorage
 
 class HomeFragment : Fragment(), FragmentAux {
 
@@ -131,7 +134,21 @@ class HomeFragment : Fragment(), FragmentAux {
             MaterialAlertDialogBuilder(it)
                 .setTitle(R.string.dialog_delete_title)
                 .setPositiveButton(R.string.dialog_delete_confirm) { _, _ ->
-                    mSnapshotsRef.child(snapshot.id).removeValue()
+                    val storageSnapshotsRef = FirebaseStorage.getInstance().reference
+                        .child(PATH_SNAPSHOT)
+                        .child(currentUser.uid)
+                        .child(snapshot.id)
+                    storageSnapshotsRef.delete().addOnCompleteListener {
+                        if (it.isSuccessful) {
+                            mSnapshotsRef.child(snapshot.id).removeValue()
+                        } else {
+                            Snackbar.make(
+                                mBinding.root,
+                                getString(R.string.home_delete_photo_error),
+                                Snackbar.LENGTH_LONG
+                            ).show()
+                        }
+                    }
                 }
                 .setNegativeButton(R.string.dialog_delete_cancel, null)
                 .show()
