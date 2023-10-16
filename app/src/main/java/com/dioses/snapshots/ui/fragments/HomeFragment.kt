@@ -20,6 +20,7 @@ import com.dioses.snapshots.databinding.FragmentHomeBinding
 import com.dioses.snapshots.databinding.ItemSnapshotBinding
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.firebase.ui.database.FirebaseRecyclerOptions
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -126,8 +127,15 @@ class HomeFragment : Fragment(), FragmentAux {
     }
 
     private fun deleteSnapshot(snapshot: Snapshot) {
-        val databaseReference = FirebaseDatabase.getInstance().reference.child(PATH_SNAPSHOT)
-        databaseReference.child(snapshot.id).removeValue()
+        context?.let {
+            MaterialAlertDialogBuilder(it)
+                .setTitle(R.string.dialog_delete_title)
+                .setPositiveButton(R.string.dialog_delete_confirm) { _, _ ->
+                    mSnapshotsRef.child(snapshot.id).removeValue()
+                }
+                .setNegativeButton(R.string.dialog_delete_cancel, null)
+                .show()
+        }
     }
 
     private fun setLike(snapshot: Snapshot, checked: Boolean) {

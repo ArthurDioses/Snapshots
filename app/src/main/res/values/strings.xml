@@ -1,5 +1,13 @@
 <resources>
     <string name="app_name">Snapshots</string>
+    <string name="dialog_delete_title">¿Eliminar instantánea?</string>
+    <string name="dialog_delete_confirm">Eliminar</string>
+    <string name="dialog_delete_cancel">Cancelar</string>
+
+    <string name="dialog_logout_title">¿Desea cerrar la sesión actual?</string>
+    <string name="dialog_logout_confirm">Cerrar</string>
+    <string name="dialog_logout_cancel">Cancelar</string>
+
     <string name="home_title">Inicio</string>
     <string name="home_profile">Perfil</string>
     <string name="home_add">Crear</string>

@@ -11,6 +11,7 @@ import com.dioses.snapshots.SnapshotsApplication
 import com.dioses.snapshots.databinding.FragmentProfileBinding
 import com.dioses.snapshots.utils.FragmentAux
 import com.firebase.ui.auth.AuthUI
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class ProfileFragment : Fragment(), FragmentAux {
 
@@ -30,7 +31,15 @@ class ProfileFragment : Fragment(), FragmentAux {
 
     private fun setupButton() {
         mBinding.btnLogout.setOnClickListener {
-            signOut()
+            context?.let {
+                MaterialAlertDialogBuilder(it)
+                    .setTitle(R.string.dialog_logout_title)
+                    .setPositiveButton(R.string.dialog_logout_confirm) { _, _ ->
+                        signOut()
+                    }
+                    .setNegativeButton(R.string.dialog_logout_cancel, null)
+                    .show()
+            }
         }
     }
 
