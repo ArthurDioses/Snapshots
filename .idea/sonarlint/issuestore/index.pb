@@ -11,3 +11,9 @@ P
 app/build.gradle,f/4/f4a01d6a4fcb971362ec00a83903fd3902f52164
 k
 ;app/src/main/java/com/dioses/snapshots/utils/FragmentAux.kt,b/1/b1aa6ce992efbf0264fbd60469fa859763eb4ef2
+v
+Fapp/src/main/java/com/dioses/snapshots/ui/fragments/ProfileFragment.kt,4/c/4c732c155cb7775b298e52035dc2de06f896030f
+r
+Bapp/src/main/java/com/dioses/snapshots/ui/fragments/AddFragment.kt,4/7/47bf20bca6e99c71f5af8519726a4ffe35581df3
+k
+;app/src/main/java/com/dioses/snapshots/entities/Snapshot.kt,1/a/1a449bbe5ea63733220c42aaf8efeabba48d79c9

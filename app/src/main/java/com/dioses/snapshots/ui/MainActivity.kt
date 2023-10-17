@@ -59,6 +59,7 @@ class MainActivity : AppCompatActivity(), MainAux {
                             )
                         ).build()
                 )
+                mFragmentManager = null
             } else {
                 SnapshotsApplication.currentUser = it.currentUser!!
                 val fragmentProfile =
@@ -76,6 +77,11 @@ class MainActivity : AppCompatActivity(), MainAux {
 
     private fun setupBottomNav(fragmentManager: FragmentManager) {
 
+        mFragmentManager?.let {//clean before to prevent errors
+            for (fragment in it.fragments) {
+                it.beginTransaction().remove(fragment!!).commit()
+            }
+        }
         val homeFragment = HomeFragment()
         val addFragment = AddFragment()
         val profileFragment = ProfileFragment()
